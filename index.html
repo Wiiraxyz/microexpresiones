@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Decodificación de Microexpresiones · Empatía cognitiva</title>
+  <meta name="description" content="Programa de entrenamiento en decodificación de microexpresiones faciales para el desarrollo de la empatía cognitiva en jóvenes universitarios.">
+  <meta name="theme-color" content="#e0e5ec">
+  <!-- Favicon embebido para evitar la petición 404 a /favicon.ico -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23e0e5ec'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%231f5f8b' stroke-width='2.5'/%3E%3Ccircle cx='12.5' cy='14' r='1.4' fill='%231f5f8b'/%3E%3Ccircle cx='19.5' cy='14' r='1.4' fill='%231f5f8b'/%3E%3Cpath d='M12 19.5q4 3 8 0' fill='none' stroke='%231f5f8b' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
+
+  <!-- Tailwind vía CDN (versión fijada). Para producción puede sustituirse por un build local. -->
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { surface: 'var(--bg)', ink: 'var(--ink)', soft: 'var(--ink-soft)', accent: 'var(--accent)' } } },
+    };
+  </script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="bg-surface text-ink">
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+
+  <!-- Cabecera fija: título + Contador de Aciertos Global + navegación por semanas -->
+  <header class="app-header">
+    <div class="app-header__inner">
+      <div>
+        <p class="eyebrow">Programa de entrenamiento · Empatía cognitiva</p>
+        <h1 class="app-header__title">Decodificación de microexpresiones faciales</h1>
+      </div>
+      <div id="score-box" class="score-box" role="status" aria-live="polite" aria-atomic="true">
+        <span class="score-box__label">Aciertos globales</span>
+        <span class="score-box__value">
+          <span id="score-value">0</span><span class="score-box__max"> / <span id="score-max">0</span></span>
+        </span>
+      </div>
+    </div>
+
+    <nav aria-label="Semanas del programa">
+      <div class="week-tabs" role="tablist" aria-label="Semana del programa">
+        <button type="button" role="tab" id="tab-1" class="neu-btn week-tab" data-week="1" aria-controls="panel-1" aria-selected="true">
+          <span class="week-tab__n">Semana 1</span><span class="week-tab__t">Familiarización</span>
+        </button>
+        <button type="button" role="tab" id="tab-2" class="neu-btn week-tab" data-week="2" aria-controls="panel-2" aria-selected="false" tabindex="-1">
+          <span class="week-tab__n">Semana 2</span><span class="week-tab__t">Velocidad y percepción</span>
+        </button>
+        <button type="button" role="tab" id="tab-3" class="neu-btn week-tab" data-week="3" aria-controls="panel-3" aria-selected="false" tabindex="-1">
+          <span class="week-tab__n">Semana 3</span><span class="week-tab__t">Engaño y matices</span>
+        </button>
+        <button type="button" role="tab" id="tab-4" class="neu-btn week-tab" data-week="4" aria-controls="panel-4" aria-selected="false" tabindex="-1">
+          <span class="week-tab__n">Semana 4</span><span class="week-tab__t">Significado y contexto</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main" class="mx-auto max-w-5xl px-4 sm:px-6 py-8">
+    <noscript>
+      <p class="neu-card">Este programa necesita JavaScript activado para funcionar.</p>
+    </noscript>
+
+    <!-- ===================== SEMANA 1 ===================== -->
+    <section role="tabpanel" id="panel-1" class="grid gap-8" aria-labelledby="tab-1" data-week="1" tabindex="0">
+      <div class="week-intro neu-card">
+        <p class="eyebrow">Semana 1 · Familiarización</p>
+        <h2>Aprender los rasgos de cada emoción</h2>
+        <p class="text-soft">Objetivo: reconocer qué músculos faciales caracterizan las seis emociones básicas (alegría, tristeza, ira, miedo, sorpresa y asco) y entrenar la detección de cambios faciales muy breves en cámara lenta.</p>
+      </div>
+
+      <article class="neu-card" data-activity="a1" aria-labelledby="a1-title">
+        <p class="eyebrow">Actividad 1</p>
+        <h3 id="a1-title" class="activity-title">Rompecabezas facial</h3>
+        <div data-mount></div>
+      </article>
+
+      <article class="neu-card" data-activity="a2" aria-labelledby="a2-title">
+        <p class="eyebrow">Actividad 2</p>
+        <h3 id="a2-title" class="activity-title">Encuentra el cambio (Slowed)</h3>
+        <div data-mount></div>
+      </article>
+    </section>
+
+    <!-- ===================== SEMANA 2 ===================== -->
+    <section role="tabpanel" id="panel-2" class="grid gap-8" aria-labelledby="tab-2" data-week="2" tabindex="0" hidden>
+      <div class="week-intro neu-card">
+        <p class="eyebrow">Semana 2 · Velocidad y percepción</p>
+        <h2>Detectar cambios de ~200 ms</h2>
+        <p class="text-soft">Objetivo: aumentar la velocidad de percepción de cambios faciales fugaces, primero con un único cambio y después con varios simultáneos entre muchos rostros.</p>
+      </div>
+
+      <article class="neu-card" data-activity="a3" aria-labelledby="a3-title">
+        <p class="eyebrow">Actividad 3</p>
+        <h3 id="a3-title" class="activity-title">Tenemos un infiltrado</h3>
+        <div data-mount></div>
+      </article>
+
+      <article class="neu-card" data-activity="a4" aria-labelledby="a4-title">
+        <p class="eyebrow">Actividad 4</p>
+        <h3 id="a4-title" class="activity-title">Tenemos un infiltrado 2.0</h3>
+        <div data-mount></div>
+      </article>
+    </section>
+
+    <!-- ===================== SEMANA 3 ===================== -->
+    <section role="tabpanel" id="panel-3" class="grid gap-8" aria-labelledby="tab-3" data-week="3" tabindex="0" hidden>
+      <div class="week-intro neu-card">
+        <p class="eyebrow">Semana 3 · Detección del engaño y matices</p>
+        <h2>Distinguir lo genuino de lo simulado</h2>
+        <p class="text-soft">Objetivo: diferenciar una sonrisa genuina de una social y discriminar emociones visualmente próximas (como sorpresa y miedo) bajo presión de tiempo.</p>
+      </div>
+
+      <article class="neu-card" data-activity="a5" aria-labelledby="a5-title">
+        <p class="eyebrow">Actividad 5</p>
+        <h3 id="a5-title" class="activity-title">¿Me estás mintiendo?</h3>
+        <div data-mount></div>
+      </article>
+
+      <article class="neu-card" data-activity="a6" aria-labelledby="a6-title">
+        <p class="eyebrow">Actividad 6</p>
+        <h3 id="a6-title" class="activity-title">Diferenciar similitudes</h3>
+        <div data-mount></div>
+      </article>
+    </section>
+
+    <!-- ===================== SEMANA 4 ===================== -->
+    <section role="tabpanel" id="panel-4" class="grid gap-8" aria-labelledby="tab-4" data-week="4" tabindex="0" hidden>
+      <div class="week-intro neu-card">
+        <p class="eyebrow">Semana 4 · Significado y contexto</p>
+        <h2>De la emoción a la inferencia</h2>
+        <p class="text-soft">Objetivo: interpretar qué significa una emoción en su contexto, anticipar la conducta probable y describir el estado mental del otro desde la empatía cognitiva: comprenderlo sin contagiarse de él.</p>
+      </div>
+
+      <article class="neu-card" data-activity="a7" aria-labelledby="a7-title">
+        <p class="eyebrow">Actividad 7</p>
+        <h3 id="a7-title" class="activity-title">¿Qué pasará?</h3>
+        <div data-mount></div>
+      </article>
+
+      <article class="neu-card" data-activity="a8" aria-labelledby="a8-title">
+        <p class="eyebrow">Actividad 8</p>
+        <h3 id="a8-title" class="activity-title">Actor de doblaje</h3>
+        <div data-mount></div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="site-footer mx-auto max-w-5xl px-4 sm:px-6 pb-12">
+    <div class="neu-inset p-5 grid gap-2">
+      <p class="m-0"><strong>Empatía cognitiva:</strong> el objetivo es comprender y anticipar los estados emocionales de otras personas, no compartirlos.</p>
+      <p class="m-0">Referencias metodológicas: METT (<em>Micro Expression Training Tool</em>, P. Ekman) y FACS (Ekman y Friesen, 1978).</p>
+      <p class="m-0">Programa desarrollado en la Universidad Camilo José Cela con el respaldo de la Clínica López Ibor.</p>
+      <p class="m-0">Material formativo en fase de prototipo: los estímulos son rostros esquemáticos generados, y los resultados no constituyen una evaluación ni un diagnóstico. Las puntuaciones solo existen en tu navegador y se pierden al recargar la página.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

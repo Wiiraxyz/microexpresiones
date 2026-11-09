@@ -1,0 +1,332 @@
+/* ==========================================================================
+   Microexpresiones · Estilos neumorfistas (Soft UI)
+   Tailwind (CDN) se usa para layout/utilidades; aquí vive todo lo que Tailwind
+   no cubre: sombras dobles, estados hundidos y los componentes de cada actividad.
+
+   Principio: relieve = sombra oscura abajo-derecha + sombra clara arriba-izquierda.
+              Pulsado / seleccionado = las mismas sombras en `inset` (efecto hundido).
+   Accesibilidad: el neumorfismo tiene poco contraste de forma; por eso el foco usa un
+   contorno explícito y los estados correcto/error llevan icono además de color.
+   ========================================================================== */
+
+/* ---------- 1. Tokens ---------- */
+:root {
+  --bg: #e0e5ec;
+  --sh-dark: #a3b1c6;
+  --sh-light: #ffffff;
+
+  --ink: #2b3445;
+  --ink-soft: #4d596d;
+  --accent: #1f5f8b;
+  --ok: #1d7448;
+  --err: #a5343a;
+  --warn: #8a5a00;
+
+  --raised: 9px 9px 18px var(--sh-dark), -9px -9px 18px var(--sh-light);
+  --raised-sm: 5px 5px 10px var(--sh-dark), -5px -5px 10px var(--sh-light);
+  --inset: inset 6px 6px 12px var(--sh-dark), inset -6px -6px 12px var(--sh-light);
+  --inset-sm: inset 3px 3px 6px var(--sh-dark), inset -3px -3px 6px var(--sh-light);
+
+  --radius: 20px;
+  --font: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ---------- 2. Base ---------- */
+html { scroll-padding-top: 9rem; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* El `display` de una clase pisaría al atributo hidden del navegador: se fuerza. */
+[hidden] { display: none !important; }
+
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+.skip-link {
+  position: absolute; left: 1rem; top: -4rem; z-index: 100;
+  padding: .6rem 1rem; border-radius: 12px; background: var(--bg); color: var(--accent);
+  box-shadow: var(--raised-sm); font-weight: 600;
+}
+.skip-link:focus { top: 1rem; }
+
+.eyebrow {
+  margin: 0 0 .25rem; font-size: .75rem; font-weight: 700;
+  letter-spacing: .09em; text-transform: uppercase; color: var(--accent);
+}
+
+/* ---------- 3. Superficies ---------- */
+.neu-card   { background: var(--bg); border-radius: 28px; padding: clamp(1.25rem, 3vw, 2rem); box-shadow: var(--raised); }
+.neu-raised { background: var(--bg); border-radius: var(--radius); box-shadow: var(--raised); }
+.neu-raised-sm { background: var(--bg); border-radius: 16px; box-shadow: var(--raised-sm); }
+.neu-inset  { background: var(--bg); border-radius: var(--radius); box-shadow: var(--inset); }
+
+/* ---------- 4. Cabecera fija y navegación ---------- */
+.app-header {
+  position: sticky; top: 0; z-index: 40;
+  background: var(--bg);
+  box-shadow: 0 10px 18px -10px var(--sh-dark);
+}
+.app-header__inner {
+  max-width: 64rem; margin: 0 auto; padding: 1rem 1.25rem .5rem;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;
+}
+.app-header__title { margin: 0; font-size: clamp(1.05rem, 2.6vw, 1.5rem); font-weight: 700; letter-spacing: -.01em; line-height: 1.2; }
+
+.score-box {
+  display: flex; align-items: baseline; gap: .75rem;
+  padding: .55rem 1.2rem; border-radius: 999px; box-shadow: var(--inset-sm);
+}
+.score-box__label { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+.score-box__value { font-size: 1.5rem; font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+.score-box__max { font-size: .95rem; font-weight: 600; color: var(--ink-soft); }
+.score-box.is-bumped .score-box__value { animation: bump .45s ease-out; }
+@keyframes bump { 40% { transform: scale(1.18); } }
+
+.week-tabs {
+  max-width: 64rem; margin: 0 auto; padding: .5rem 1.25rem 1.1rem;
+  /* minmax(0, 1fr): sin esto las columnas no pueden encogerse por debajo de su contenido y desbordan en móvil */
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .85rem;
+}
+.week-tab { display: flex; flex-direction: column; align-items: center; gap: .1rem; min-width: 0; padding: .6rem .5rem; line-height: 1.2; }
+.week-tab__n { font-size: .9rem; font-weight: 700; white-space: nowrap; }
+.week-tab__t { font-size: .72rem; font-weight: 500; color: var(--ink-soft); }
+.week-tab[aria-selected="true"] { color: var(--accent); }
+@media (max-width: 40rem) {
+  .app-header__inner { padding-inline: 1rem; }
+  .week-tabs { gap: .5rem; padding-inline: 1rem; }
+  .week-tab { padding-inline: .25rem; }
+  .week-tab__t { display: none; }
+  .week-tab__n { font-size: .78rem; }
+}
+
+/* ---------- 5. Botones ---------- */
+.neu-btn {
+  position: relative;
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  padding: .75rem 1.35rem; border: 0; border-radius: 16px;
+  background: var(--bg); color: var(--ink);
+  font: inherit; font-weight: 600; cursor: pointer;
+  box-shadow: var(--raised-sm);
+  transition: box-shadow .15s ease, color .15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.neu-btn:hover:not(:disabled) { box-shadow: 7px 7px 14px var(--sh-dark), -7px -7px 14px var(--sh-light); }
+/* Pulsado o seleccionado → hundido */
+.neu-btn:active:not(:disabled),
+.neu-btn[aria-pressed="true"],
+.neu-btn[aria-checked="true"],
+.neu-btn[aria-selected="true"] { box-shadow: var(--inset-sm); }
+.neu-btn:disabled { cursor: not-allowed; opacity: .5; box-shadow: var(--raised-sm); }
+
+.neu-btn--primary { color: var(--accent); }
+.neu-btn--xl { min-height: 4rem; padding: 1.1rem 2rem; border-radius: 22px; font-size: 1.2rem; box-shadow: var(--raised); }
+.neu-btn--xl:active:not(:disabled) { box-shadow: var(--inset); }
+.neu-btn--choice { width: 100%; justify-content: flex-start; text-align: left; font-weight: 500; padding: 1rem 1.25rem; }
+
+/* Resultado: borde + icono (no solo color). Se mantiene legible aunque el botón esté deshabilitado. */
+.neu-btn.is-correct, .neu-btn.is-wrong { opacity: 1; box-shadow: var(--inset-sm); }
+.neu-btn.is-correct { outline: 3px solid var(--ok); outline-offset: -3px; }
+.neu-btn.is-wrong   { outline: 3px solid var(--err); outline-offset: -3px; }
+.neu-btn.is-correct::after, .neu-btn.is-wrong::after {
+  position: absolute; top: 6px; right: 6px; display: grid; place-items: center;
+  width: 22px; height: 22px; border-radius: 50%; color: #fff; font-size: .8rem; font-weight: 800; line-height: 1;
+}
+.neu-btn.is-correct::after { content: "✓"; background: var(--ok); }
+.neu-btn.is-wrong::after   { content: "✕"; background: var(--err); }
+
+/* ---------- 6. Campos (inputs / select / textarea hundidos) ---------- */
+.neu-field {
+  width: 100%; box-sizing: border-box; padding: .85rem 1rem; border: 0; border-radius: 14px;
+  background: var(--bg); color: var(--ink); font: inherit;
+  box-shadow: var(--inset);
+}
+select.neu-field {
+  appearance: none; padding-right: 2.5rem; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%234d596d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 1rem center;
+}
+.neu-field--area { min-height: 8rem; resize: vertical; line-height: 1.5; }
+.neu-field::placeholder { color: var(--ink-soft); opacity: .75; }
+.neu-field.is-locked, .neu-field:disabled { opacity: .75; cursor: not-allowed; }
+.field__label { display: block; margin: 1.25rem 0 .6rem; font-weight: 600; }
+.field__count { display: block; margin-top: .4rem; font-size: .8rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+
+/* ---------- 7. Barra de progreso ---------- */
+.neu-progress { flex: 1; height: 14px; border-radius: 999px; overflow: hidden; box-shadow: var(--inset-sm); }
+.neu-progress__fill { width: 0; height: 100%; border-radius: 999px; background: var(--accent); }
+.neu-progress__fill--timer { width: 100%; background: var(--warn); }
+
+/* ---------- 8. Estructura común de actividad (shell) ---------- */
+.activity-instructions { max-width: 70ch; margin: 0 0 1.25rem; color: var(--ink-soft); }
+.round-bar {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem;
+  margin-bottom: 1.25rem; font-size: .85rem; font-weight: 600; color: var(--ink-soft); font-variant-numeric: tabular-nums;
+}
+.activity-actions { display: flex; flex-wrap: wrap; gap: .85rem; margin-top: 1.25rem; }
+
+.feedback { margin: 1.25rem 0 0; padding: .8rem 1.1rem; border-radius: 14px; box-shadow: var(--inset-sm); font-size: .95rem; }
+.feedback:empty { display: none; }
+.feedback--ok::before   { content: "✓ "; font-weight: 800; color: var(--ok); }
+.feedback--err::before  { content: "✕ "; font-weight: 800; color: var(--err); }
+.feedback--warn::before { content: "! "; font-weight: 800; color: var(--warn); }
+.feedback--ok   { color: var(--ok); }
+.feedback--err  { color: var(--err); }
+.feedback--warn { color: var(--warn); }
+
+.activity-summary { margin-top: 1rem; padding: 2rem 1.5rem; text-align: center; }
+.summary__title  { margin: 0; font-weight: 700; color: var(--ink-soft); }
+.summary__figure { margin: .25rem 0; font-size: 3rem; font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+.summary__note   { margin: 0 0 1.25rem; color: var(--ink-soft); }
+
+.choice-row  { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1.25rem; }
+.choice-row > .neu-btn { flex: 1 1 14rem; }
+.choice-list { display: grid; gap: .85rem; margin-top: 1.25rem; }
+
+/* ---------- 9. Rostros (SVG placeholder o foto real) ---------- */
+.face-svg, .face-img { display: block; width: 100%; height: 100%; }
+.face-img { object-fit: cover; border-radius: 12px; }
+.piece-svg { display: block; width: 100%; height: auto; border-radius: 10px; }
+
+/* ---------- 10. Vídeo simulado (Act. 2 y 7) ---------- */
+.video-sim { margin: 0; }
+.video-sim__screen {
+  position: relative; display: grid; place-items: center; overflow: hidden;
+  aspect-ratio: 16 / 9; border-radius: 20px; background: #2a3342; box-shadow: var(--inset);
+}
+.video-sim__face { height: 94%; aspect-ratio: 5 / 6; }
+.video-sim__badge, .video-sim__status {
+  position: absolute; top: .75rem; padding: .2rem .65rem; border-radius: 999px;
+  background: rgba(255, 255, 255, .14); color: #f1f4f8; font-size: .75rem; font-weight: 600; letter-spacing: .03em;
+}
+.video-sim__badge  { left: .75rem; }
+.video-sim__status { right: .75rem; }
+.video-sim__bar { display: flex; align-items: center; gap: 1rem; margin-top: 1rem; }
+.video-sim__time { font-size: .8rem; font-weight: 600; color: var(--ink-soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.detect-btn { display: flex; width: min(100%, 22rem); margin: 1.5rem auto 0; }
+
+.scene-context { margin: 0 0 1.25rem; padding: .9rem 1.1rem; border-radius: 14px; box-shadow: var(--inset-sm); color: var(--ink-soft); }
+
+/* ---------- 11. Rejilla de rostros (Act. 3 y 4) ---------- */
+/* Fallback si el CDN de Tailwind no carga; con Tailwind, sus grid-cols-* tienen prioridad. */
+.face-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; padding: .5rem; }
+.face-card { position: relative; padding: 8px; aspect-ratio: 5 / 6; border-radius: 22px; overflow: hidden; }
+.face-layer { position: absolute; inset: 8px; display: block; }
+/* Sin transición: el cambio debe durar exactamente los ms configurados. */
+.face-layer { transition: none; }
+.layer-alt { visibility: hidden; }
+.face-card.is-flashing .layer-alt { visibility: visible; }
+.face-card.is-flashing .layer-base { visibility: hidden; }
+.face-caption {
+  position: absolute; left: 0; right: 0; bottom: 0; padding: .3rem; text-align: center;
+  background: rgba(224, 229, 236, .92); font-size: .78rem; font-weight: 700; color: var(--ink);
+}
+.face-caption:empty { display: none; }
+.face-grid.is-locked .face-card { cursor: default; }
+.face-grid.is-locked .face-card:hover, .face-grid.is-locked .face-card:active { box-shadow: var(--raised-sm); }
+.face-card.is-correct, .face-card.is-wrong { box-shadow: var(--inset-sm) !important; }
+
+/* ---------- 12. Actividad 1 · Rompecabezas ---------- */
+.a1-layout { display: grid; gap: 1.75rem; }
+@media (min-width: 48rem) { .a1-layout { grid-template-columns: minmax(15rem, 20rem) 1fr; align-items: start; } }
+
+.face-stage { position: relative; aspect-ratio: 5 / 6; width: 100%; max-width: 20rem; margin: 0 auto; padding: 0; }
+.face-stage__render { position: absolute; inset: 4%; }
+
+/* Zonas de destino sobre el rostro (porcentajes sobre el viewBox 200×240 del SVG). */
+.drop-zone {
+  position: absolute; left: 10%; right: 10%; box-sizing: border-box;
+  border: 2px dashed rgba(77, 89, 109, .55); border-radius: 14px;
+  transition: background .12s ease, border-color .12s ease;
+}
+/* Etiqueta a caballo sobre el borde, con fondo sólido, para no tapar los rasgos del rostro. */
+.drop-zone::after {
+  content: attr(aria-label); position: absolute; left: 10px; top: -.55rem; padding: 0 .35rem; border-radius: 6px;
+  background: var(--bg); font-size: .6rem; font-weight: 700; line-height: 1.1rem; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-soft);
+}
+.drop-zone--brows { top: 24%; height: 13%; }
+.drop-zone--eyes  { top: 38%; height: 14%; }
+.drop-zone--mouth { top: 54%; height: 31%; }
+.drop-zone.is-over     { background: rgba(31, 95, 139, .16); border: 2px solid var(--accent); }
+.drop-zone.is-wrong    { border: 2px solid var(--err); background: rgba(165, 52, 58, .12); }
+.drop-zone.is-rejected { animation: shake .3s ease; border-color: var(--warn); }
+@keyframes shake { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
+.prompt { margin-bottom: 1.25rem; }
+.prompt__kicker { margin: 0; font-size: .85rem; color: var(--ink-soft); }
+.prompt__target { margin: 0; font-size: 1.9rem; font-weight: 800; letter-spacing: -.01em; color: var(--accent); }
+.prompt__hint   { margin: .6rem 0 0; padding: .7rem 1rem; border-radius: 14px; box-shadow: var(--inset-sm); font-size: .9rem; color: var(--ink-soft); }
+
+.palette { display: grid; gap: 1.1rem; }
+.palette__group { margin: 0; padding: 0; border: 0; min-width: 0; }
+.palette__group legend { padding: 0; margin-bottom: .6rem; font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+.palette__pieces { display: grid; grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr)); gap: .85rem; padding: .4rem; }
+
+.piece { flex-direction: column; gap: .4rem; padding: .55rem; border-radius: 14px; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
+.piece__label { font-size: .72rem; font-weight: 600; line-height: 1.2; text-align: center; color: var(--ink-soft); }
+.piece[aria-pressed="true"] { color: var(--accent); outline: 2px solid var(--accent); outline-offset: -2px; }
+.piece.is-dragging { opacity: .35; }
+.is-dragging-active, .is-dragging-active * { cursor: grabbing !important; }
+.drag-ghost {
+  position: fixed; left: 0; top: 0; z-index: 200; pointer-events: none; margin: 0;
+  opacity: .92; box-shadow: 12px 12px 24px rgba(43, 52, 69, .35), -4px -4px 12px var(--sh-light);
+}
+
+/* ---------- 13. Actividad 5 · Sonrisas ---------- */
+.smile-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1rem, 4vw, 2rem); max-width: 34rem; margin: 0 auto; }
+.smile-card { flex-direction: column; gap: .75rem; padding: 1rem; border-radius: 24px; box-shadow: var(--raised); }
+.smile-card[aria-checked="true"] { box-shadow: var(--inset); color: var(--accent); }
+.smile-card:disabled:not(.is-correct):not(.is-wrong) { opacity: .6; }
+.smile-card__img { display: block; width: 100%; aspect-ratio: 5 / 6; }
+.smile-card__label { font-weight: 700; }
+
+/* ---------- 14. Actividad 6 · Flashcard ---------- */
+.flashcard-wrap { display: grid; gap: 1.1rem; max-width: 26rem; margin: 0 auto; }
+.flashcard { display: grid; place-items: center; width: min(100%, 16rem); aspect-ratio: 5 / 6; margin: 0 auto; padding: 12px; border-radius: 26px; box-sizing: border-box; }
+.flashcard > .face-svg, .flashcard > .face-img { border-radius: 14px; }
+.flashcard__mask { font-size: 4.5rem; font-weight: 800; color: var(--ink-soft); opacity: .45; }
+/* La barra solo aparece (sin mover el layout) cuando empieza la cuenta atrás. */
+.flashcard-wrap:has(.choice-row[hidden]) .neu-progress { visibility: hidden; }
+.flashcard-wrap .choice-row { margin-top: 0; }
+
+/* ---------- 15. Actividad 8 · Doblaje ---------- */
+.dubbing-context { display: flex; flex-wrap: wrap; align-items: center; gap: 1.25rem; margin: 0; padding: 1.1rem; }
+.dubbing-context__face { flex: none; width: 8.5rem; aspect-ratio: 5 / 6; }
+.dubbing-context figcaption { flex: 1 1 14rem; color: var(--ink-soft); }
+.references { display: grid; gap: .85rem; margin-top: 1.5rem; }
+.references__title { margin: 0; font-size: .8rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
+.reference { padding: 1rem 1.2rem; }
+.reference p { margin: .15rem 0 0; }
+.reference__tag { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+
+/* ---------- 16. Modal (<dialog>) ---------- */
+.neu-dialog {
+  width: min(92vw, 28.5rem); padding: 1.75rem; border: 0; border-radius: 28px;
+  background: var(--bg); color: var(--ink); box-shadow: var(--raised);
+}
+.neu-dialog::backdrop { background: rgba(43, 52, 69, .5); backdrop-filter: blur(3px); }
+.dialog__title { margin: 0 0 .4rem; font-size: 1.25rem; font-weight: 700; }
+.dialog__text  { margin: 0 0 1rem; color: var(--ink-soft); }
+.dialog__fields { display: grid; gap: 1rem; }
+.dialog__field { display: grid; gap: .45rem; font-weight: 600; font-size: .9rem; }
+
+/* ---------- 17. Contenido de página ---------- */
+.week-intro h2 { margin: 0 0 .5rem; font-size: 1.4rem; font-weight: 700; letter-spacing: -.01em; }
+.week-intro p:last-child { margin-bottom: 0; }
+.activity-title { margin: 0 0 1rem; font-size: 1.2rem; font-weight: 700; }
+.site-footer { color: var(--ink-soft); font-size: .85rem; }
+.site-footer a { color: var(--accent); }
+
+/* ---------- 18. Movimiento reducido ---------- */
+/* La cuenta atrás de la Act. 6 es información, no adorno: se exceptúa. */
+@media (prefers-reduced-motion: reduce) {
+  *:not(.neu-progress__fill--timer), *::before, *::after {
+    animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important;
+  }
+}
